@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="quake-spigot:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/quake_spigot_jar</output-path>
+    <root id="archive" name="quake-spigot.jar" />
+  </artifact>
+</component>

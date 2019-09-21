@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.alvarlagerlof.quakeplugin</groupId>
+  <artifactId>Quake</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  <repositories>
+      <repository>
+          <id>spigot-repo</id>
+          <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      </repository>
+      <repository>
+          <id>bungeecord-repo</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      </repository>
+      <repository>
+        <id>aikar</id>
+        <url>https://repo.aikar.co/content/groups/aikar/</url>
+      </repository>
+  </repositories>
+  <dependencies>
+      <dependency>
+        <groupId>co.aikar</groupId>
+        <artifactId>acf-paper</artifactId> <!-- Don't forget to replace this -->
+        <version>0.5.0-SNAPSHOT</version> <!-- Replace this as well -->
+      </dependency>
+      <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.14.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+      </dependency>
+       <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.12-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.12-SNAPSHOT</version>
+            <type>javadoc</type>
+            <scope>provided</scope>
+        </dependency>
+  </dependencies>
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+        <includes>
+          <include>plugin.yml</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+          <version>3.7.0</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+              <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+              <source>1.8</source>
+              <target>1.8</target>
+              <compilerArgs>
+                  <arg>-parameters</arg>
+              </compilerArgs>
+              <testFailureIgnore>true</testFailureIgnore>
+          </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.1.1</version>
+          <configuration>
+            <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+              <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+              <relocations>
+                  <relocation>
+                      <pattern>co.aikar.commands</pattern>
+                      <shadedPattern>com.alvarlagerlof.quakeplugin.acf</shadedPattern> <!-- Replace this -->
+                  </relocation>
+              </relocations>
+          </configuration>
+          <executions>
+              <execution>
+                  <phase>package</phase>
+                  <goals>
+                      <goal>shade</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

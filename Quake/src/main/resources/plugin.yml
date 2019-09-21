@@ -1,0 +1,4 @@
+main: com.alvarlagerlof.quakeplugin.Main
+name: Quake
+version: 0.1
+api-version: 1.14
