@@ -66,7 +66,7 @@ public class SignHandler {
 
             if (conf.contains("signs")) {
                 Set<String> set = conf.getConfigurationSection("signs").getKeys(false);
-                ArrayList keys = new ArrayList<String>(set);
+                ArrayList<String> keys = new ArrayList<String>(set);
             
                 keys.forEach(item -> {
                     Location loc = new Location(
@@ -115,7 +115,6 @@ public class SignHandler {
                     Boolean playerIsAlreadyOnArena = false;
 
                     for (HashMap.Entry<String, Game> entry : games.entrySet()) {
-                        String key = entry.getKey();
                         Game game = entry.getValue();
                     
                         if (game.getPlayers().contains(player)) {
@@ -169,7 +168,7 @@ public class SignHandler {
 
         if (conf.contains("signs")) {
             Set<String> set = conf.getConfigurationSection("signs").getKeys(false);
-            ArrayList keys = new ArrayList<String>(set);
+            ArrayList<String> keys = new ArrayList<String>(set);
         
             keys.forEach(item -> {
                 Location loc = new Location(

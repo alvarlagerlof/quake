@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class PressurePlateMaterials {
 
-    public List getMaterials() {
-        List materials = new ArrayList();
-
+    public List<Material> getMaterials() {
+        List<Material> materials = new ArrayList<Material>();
+    
         materials.add(Material.TRIPWIRE);
         materials.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
         materials.add(Material.HEAVY_WEIGHTED_PRESSURE_PLATE);

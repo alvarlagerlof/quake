@@ -34,10 +34,10 @@ public class CustomScoreboard {
         this.player = player;
         this.manager = Bukkit.getScoreboardManager();
         this.board = manager.getNewScoreboard();
-        this.objective = board.registerNewObjective("test", "dummy");
+        this.objective = board.registerNewObjective("test", "dummy", "Test");
     }
 
-    public void update(String displayName, ArrayList list, Boolean enabled) {
+    public void update(String displayName, ArrayList<String> list, Boolean enabled) {
         this.displayName = displayName;
         this.list = list;
         this.enabled = enabled;
@@ -46,7 +46,7 @@ public class CustomScoreboard {
 
     }
 
-    public void update(String displayName, ArrayList list) {
+    public void update(String displayName, ArrayList<String> list) {
         this.displayName = displayName;
         this.list = list;
     }

@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.Particle;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.Sound;
@@ -30,6 +29,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.text.DecimalFormat;
 
 import com.alvarlagerlof.quakeplugin.Message;
@@ -138,7 +138,7 @@ public class Game {
                         List<Block> nearbyBlocks = getNearbyBlocks(bullet.getLocation(), 3);
 
                         for (Block block : nearbyBlocks) {
-                            BoundingBox box = block.getBoundingBox();
+                            //BoundingBox box = block.getBoundingBox();
                             Location point1 = new Location(bullet.getPlayer().getWorld(), block.getLocation().getX(), block.getLocation().getY(), block.getLocation().getZ());
                             Location point2 = new Location(bullet.getPlayer().getWorld(), block.getLocation().getX()+1.0, block.getLocation().getY()+1.0, block.getLocation().getZ()+1.0);
                             
@@ -171,7 +171,7 @@ public class Game {
                     }
                 }
 
-                bullets.remove(bulletsToRemove);
+                bullets.removeAll(bulletsToRemove);
             }
 
         }.runTaskTimer(plugin, 0, 1);
@@ -510,7 +510,7 @@ public class Game {
     }
 
     public Boolean checkAABB(Location origin, Vector direction, Location point1, Location point2) {
-        Location center = point1.add(point2).multiply(0.5);
+        //Location center = point1.add(point2).multiply(0.5);
 
 
         Location origo = new Location(origin.getWorld(), 0, 0, 0);
@@ -529,7 +529,7 @@ public class Game {
 
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        Material material = player.getItemInHand().getType();
+        Material material = player.getInventory().getItemInMainHand().getType();
 
         if (players.contains(player) && joinActionTimers.get(player) == 0) {
         
@@ -654,7 +654,7 @@ public class Game {
 
     public void onPlayerBreakBlock(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        Material material = player.getItemInHand().getType();
+        //Material material = player.getItemInHand().getType();
 
         if (players.contains(player) && joinActionTimers.get(player) == 0) {
             // Cancel default
@@ -662,8 +662,8 @@ public class Game {
         }
     }
 
-    public ArrayList getScoreboardList() {
-        ArrayList list = new ArrayList();
+    public ArrayList<String> getScoreboardList() {
+        ArrayList<String> list = new ArrayList<String>();
        
         list.add("&c&lKills");
 
@@ -675,9 +675,7 @@ public class Game {
         }
         
         list.add("--------------");
-
         list.add("&2&lMap: &r" + arena);
-
 
         return list;
     }
