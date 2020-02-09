@@ -10,11 +10,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map;
 
-import com.alvarlagerlof.quakeplugin.PressurePlateMaterials;
+import com.alvarlagerlof.quakeplugin.MaterialLists;;
 
 public class PressurePlateHandler {
     JavaPlugin plugin;
@@ -50,7 +51,7 @@ public class PressurePlateHandler {
                         conf.getInt("pressureplates."+id+".z")
                     );
 
-                    if (new PressurePlateMaterials().getMaterials().contains(loc.getBlock().getType())) {
+                    if (new MaterialLists().getPressurePlateMaterials().contains(loc.getBlock().getType())) {
                         HashMap<Integer, Integer> times = deleteTimers.get(player);
                         times.put(id, -1);
 
@@ -82,13 +83,13 @@ public class PressurePlateHandler {
         playerVectors.put(e.getPlayer(), diff);
 
        
-        if (new PressurePlateMaterials().getMaterials().contains(e.getTo().getBlock().getType())) {
+        if (new MaterialLists().getPressurePlateMaterials().contains(e.getTo().getBlock().getType())) {
         
             Player player = e.getPlayer();
             FileConfiguration conf = plugin.getConfig();
 
             Set<String> set = conf.getConfigurationSection("pressureplates").getKeys(false);
-            ArrayList<String> keys = new ArrayList<String>(set);
+            List<String> keys = new ArrayList<String>(set);
 
             String correctKey = null;
             
@@ -135,11 +136,11 @@ public class PressurePlateHandler {
     }
 
     public void onBlockBreak(BlockBreakEvent event) {
-        if (new PressurePlateMaterials().getMaterials().contains(event.getBlock().getType())) {
+        if (new MaterialLists().getPressurePlateMaterials().contains(event.getBlock().getType())) {
             Player player = event.getPlayer();
             FileConfiguration conf = plugin.getConfig();
             Set<String> set = conf.getConfigurationSection("pressureplates").getKeys(false);
-            ArrayList<String> keys = new ArrayList<String>(set);
+            List<String> keys = new ArrayList<String>(set);
 
             String correctKey = null;
             

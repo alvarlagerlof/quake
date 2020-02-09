@@ -1,5 +1,8 @@
 package com.alvarlagerlof.quakeplugin;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -9,12 +12,14 @@ public class Bullet {
     Location location;
     Vector direction;
     Integer lifetime;
+    List<Player> killedPlayers;
 
     public Bullet(Player player, Location location, Vector direction) {
         this.player = player;
         this.location = location;
         this.direction = direction;
         this.lifetime = 0;
+        this.killedPlayers = new ArrayList<Player>();
     }
   
     public Player getPlayer() {
@@ -41,8 +46,20 @@ public class Bullet {
         return this.lifetime;
     }
 
-    public void increaseLifeTime() {
+    public void increaseLifetime() {
         this.lifetime++;
+    }
+
+    public void setLifetime(Integer lifetime) {
+        this.lifetime = lifetime;
+    }
+
+    public List<Player> getkilledPlayers(){
+        return killedPlayers;
+    }
+
+    public void addKilledPlayer(Player player) {
+        killedPlayers.add(player);
     }
     
 

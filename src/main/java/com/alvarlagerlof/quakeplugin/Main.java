@@ -5,10 +5,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.Location;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -24,12 +23,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.alvarlagerlof.quakeplugin.PlayerDeathListener;
 import com.alvarlagerlof.quakeplugin.QuakeCommand;
 import com.alvarlagerlof.quakeplugin.QSetupCommand;
 import com.alvarlagerlof.quakeplugin.Game;
 import com.alvarlagerlof.quakeplugin.PressurePlateHandler;
-
 
 
 public final class Main extends JavaPlugin implements Listener {
@@ -42,9 +39,6 @@ public final class Main extends JavaPlugin implements Listener {
 
         // Enable our class to check for new players using onPlayerJoin()
         getServer().getPluginManager().registerEvents(this, this);
-
-        // Set death listner
-        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
 
         // Register commands
         PaperCommandManager manager = new PaperCommandManager(this);
@@ -77,10 +71,7 @@ public final class Main extends JavaPlugin implements Listener {
         Location spawnPoint = new Teleport(this, player).getLobby();
         if (spawnPoint != null) player.teleport(spawnPoint);
 
-
         //getServer().getPlayer("Ideaman02").addPassenger((Entity) player);
-
-
     }
 
     @EventHandler
@@ -113,6 +104,16 @@ public final class Main extends JavaPlugin implements Listener {
             game.onPlayerRespawn(event);
         });
     }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        games.entrySet().forEach(entry -> {
+            Game game = entry.getValue();
+        
+            game.onPlayerDropItem(event);
+        });
+    }
+
 
     @EventHandler
     public void onSignChange(SignChangeEvent event) {
@@ -149,23 +150,6 @@ public final class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        games.entrySet().forEach(entry -> {
-            Game game = entry.getValue();
-            game.onEntityDamageByEntity(event);
-        });
-    }
-
-    @EventHandler
-    public void onProjectileHit(ProjectileHitEvent event) {
-        games.entrySet().forEach(entry -> {
-            Game game = entry.getValue();
-            game.onProjectileHit(event);
-        });
-
-    }
-
-    @EventHandler
     public void onMove(PlayerMoveEvent e) {
         pressurePlateHandler.onPlayerMove(e);
     }
@@ -174,7 +158,11 @@ public final class Main extends JavaPlugin implements Listener {
     public void onBlockBreak(BlockBreakEvent event){
         pressurePlateHandler.onBlockBreak(event);
     }
-
+    
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e) {
+        e.setDeathMessage(null);
+    }
 
 
 }                                    

@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.Location;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -37,14 +38,14 @@ public class Teleport {
         }
     }
 
-    public Location getSpawnPoint(String arena, ArrayList<Player> players) {
+    public Location getSpawnPoint(String arena, List<Player> players) {
 
         FileConfiguration conf = plugin.getConfig();
 
         if (conf.getConfigurationSection("arenas." + arena + ".spawnpoints").getKeys(false).size() > 0) {
             // Get best spawnpoint
             Set<String> set = conf.getConfigurationSection("arenas." + arena + ".spawnpoints").getKeys(false);
-            ArrayList<String> keys = new ArrayList<String>(set);
+            List<String> keys = new ArrayList<String>(set);
 
             double longestDistance = 0.0;
             String longestKey = null;

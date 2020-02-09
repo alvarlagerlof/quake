@@ -1,5 +1,7 @@
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/SignHandler.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/QuakeCommand.java
+/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/MaterialListsUNUSED.java
+/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/MaterialLists.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/Bullet.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/QSetupCommand.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/Main.java
@@ -8,6 +10,4 @@
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/Message.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/Fireworks.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/PressurePlateHandler.java
-/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/PlayerDeathListener.java
-/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/PressurePlateMaterials.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quakeplugin/CustomScoreboard.java

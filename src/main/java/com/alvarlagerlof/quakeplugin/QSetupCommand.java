@@ -11,6 +11,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.CommandCompletion;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -60,7 +61,7 @@ public class QSetupCommand extends BaseCommand {
         public void doList(Player player) {
             if (conf.contains("arenas")) {
                 Set<String> set = conf.getConfigurationSection("arenas").getKeys(false);
-                ArrayList<String> keys = new ArrayList<String>(set);
+                List<String> keys = new ArrayList<String>(set);
     
                 new Message().sendToPlayer(player, "f", "Arenas: " + String.join(", ", keys));
     
@@ -194,7 +195,7 @@ public class QSetupCommand extends BaseCommand {
         public void doDeleteSpawnpoint(Player player, String arena) {
             if (conf.getConfigurationSection("arenas." + arena + ".spawnpoints").getKeys(false).size() > 0) {
                 Set<String> set = conf.getConfigurationSection("arenas." + arena + ".spawnpoints").getKeys(false);
-                ArrayList<String> keys = new ArrayList<String>(set);
+                List<String> keys = new ArrayList<String>(set);
             
                 double shortestDistance = 10000000;
                 int shortestKey = 1000;
@@ -244,7 +245,7 @@ public class QSetupCommand extends BaseCommand {
 
                  // If pressureplate is saved
                 Set<String> set = conf.getConfigurationSection("pressureplates").getKeys(false);
-                ArrayList<String> keys = new ArrayList<String>(set);
+                List<String> keys = new ArrayList<String>(set);
 
                 
                 for (String key : keys) {

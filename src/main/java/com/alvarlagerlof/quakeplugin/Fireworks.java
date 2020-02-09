@@ -9,6 +9,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Color;
 import org.bukkit.World;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,7 +26,7 @@ public class Fireworks {
     }
 
     public void spawnWin(){
-        ArrayList<Color> colors = new ArrayList<Color>();
+        List<Color> colors = new ArrayList<Color>();
         colors.add(Color.ORANGE);
         colors.add(Color.SILVER);
         colors.add(Color.BLUE);
@@ -34,7 +35,7 @@ public class Fireworks {
         colors.add(Color.YELLOW);
         colors.add(Color.AQUA);
 
-        ArrayList<FireworkEffect.Type> types = new ArrayList<FireworkEffect.Type>();
+        List<FireworkEffect.Type> types = new ArrayList<FireworkEffect.Type>();
         types.add(FireworkEffect.Type.BALL);
         types.add(FireworkEffect.Type.BALL_LARGE);
         types.add(FireworkEffect.Type.BURST);

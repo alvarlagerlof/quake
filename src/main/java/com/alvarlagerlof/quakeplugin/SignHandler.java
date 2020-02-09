@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -66,7 +67,7 @@ public class SignHandler {
 
             if (conf.contains("signs")) {
                 Set<String> set = conf.getConfigurationSection("signs").getKeys(false);
-                ArrayList<String> keys = new ArrayList<String>(set);
+                List<String> keys = new ArrayList<String>(set);
             
                 keys.forEach(item -> {
                     Location loc = new Location(
@@ -168,7 +169,7 @@ public class SignHandler {
 
         if (conf.contains("signs")) {
             Set<String> set = conf.getConfigurationSection("signs").getKeys(false);
-            ArrayList<String> keys = new ArrayList<String>(set);
+            List<String> keys = new ArrayList<String>(set);
         
             keys.forEach(item -> {
                 Location loc = new Location(
@@ -205,7 +206,6 @@ public class SignHandler {
                         } else {
                             sign.setLine(3, ChatColor.translateAlternateColorCodes('&', "&cArena not found"));
                         }
-
 
                         sign.update();
                     }
