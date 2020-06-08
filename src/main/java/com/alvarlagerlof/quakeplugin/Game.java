@@ -520,10 +520,12 @@ public class Game {
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_FLAP, 1, 1);
 
                     double pitch = ((player.getLocation().getPitch() + 90) * Math.PI) / 180;
-                    double yaw  = ((player.getLocation().getYaw() + 90)  * Math.PI) / 180;
-                    double x = Math.sin(pitch) * Math.cos(yaw);
-                    double y = Math.sin(pitch) * Math.sin(yaw);
-                    double z = Math.cos(pitch);
+                    double yaw = ((player.getLocation().getYaw() + 90)  * Math.PI) / 180;
+                    new Message().sendToPlayer(player, "&lp: ", pitch + " y: " + yaw);
+
+                    double x = Math.cos(yaw) * Math.sin(pitch); 
+                    double z = Math.sin(yaw) * Math.sin(pitch);
+                    double y = Math.cos(pitch);
 
                     Vector vector = new Vector(x, y, z);
 
