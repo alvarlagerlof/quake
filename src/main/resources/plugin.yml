@@ -10,14 +10,6 @@ commands:
     permission: quake.admin
     permission-message: You do not have permission!
     usage: /<quake>
-  quakesetup:
-    description: Quake2 Setup
-    aliases:
-      - qsetup
-      - qs
-    permission: quake.admin
-    permission-message: You do not have permission!
-    usage: /<quakesetup>
 permissions:
   quake.admin:
     description: Allows all commands

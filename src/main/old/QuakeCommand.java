@@ -14,11 +14,11 @@ import com.alvarlagerlof.quake2.Message;
 
 @CommandAlias("quake|q")
 @CommandPermission("quake.admin")
-public class Quake2Command extends co.aikar.commands.BaseCommand {
+public class QuakeCommand extends co.aikar.commands.BaseCommand {
 
     JavaPlugin plugin;
 
-    public Quake2Command(JavaPlugin plugin) {
+    public QuakeCommand(JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
