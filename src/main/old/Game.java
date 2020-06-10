@@ -34,9 +34,9 @@ import org.bukkit.util.Vector;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class Game { 
+public class Game {
 
-    String arena; 
+    String arena;
     Main plugin;
     Boolean debug = false;
 
@@ -55,62 +55,62 @@ public class Game {
     Boolean gameWon = false;
     Boolean gameCountDownStarted = false;
     Boolean firstKill = true;
-    
 
     List<Player> players = new ArrayList<Player>();
-    List<Bullet> bullets = new ArrayList<Bullet>();
-   
+    List<IBullet> bullets = new ArrayList<IBullet>();
+
     HashMap<Player, Integer> kills = new HashMap<Player, Integer>();
     HashMap<Player, Integer> gunTimers = new HashMap<Player, Integer>();
     HashMap<Player, Integer> flyBoostTimers = new HashMap<Player, Integer>();
-    
+
     HashMap<Player, CustomScoreboard> scoreboards = new HashMap<Player, CustomScoreboard>();
 
     public Game(Main plugin, String arena, Boolean debug) {
         this.plugin = plugin;
         this.arena = arena;
 
-        if (plugin.getDebug()) updateDebug();
+        if (plugin.getDebug())
+            updateDebug();
 
         new BukkitRunnable() {
-            public void run(){
+            public void run() {
                 gunTimers.entrySet().forEach(entry -> {
                     Player player = entry.getKey();
                     Integer time = entry.getValue();
-                
+
                     if (time > 0) {
                         gunTimers.put(player, time - 1);
 
-                        double filip = (((double) (time/20.0)-1.5)*-1.0)+0.001;
+                        double filip = (((double) (time / 20.0) - 1.5) * -1.0) + 0.001;
                         String round = new DecimalFormat("#.#").format(filip);
 
                         String cubes = "";
 
                         for (int i = 0; i < 10; i++) {
-                            cubes += ((double) i/10.0*1.5 > Double.parseDouble(round)) ? "&c►" : "&2◄";
+                            cubes += ((double) i / 10.0 * 1.5 > Double.parseDouble(round)) ? "&c►" : "&2◄";
                         }
 
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&7[" + cubes + "&7] &6&L" + String.valueOf(round) + " seconds")));
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                                TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
+                                        "&7[" + cubes + "&7] &6&L" + String.valueOf(round) + " seconds")));
                     }
                 });
 
                 flyBoostTimers.entrySet().forEach(entry -> {
                     Player player = entry.getKey();
                     Integer time = entry.getValue();
-                
+
                     if (time > 0) {
                         flyBoostTimers.put(player, time - 1);
                     }
 
-                    player.setExp(1f-((float)time/defaultFlyBoostTimer));
+                    player.setExp(1f - ((float) time / defaultFlyBoostTimer));
 
                     // 100 -> 0 | 0 -> 6.9
 
                 });
 
-            
-
-                List<Bullet> bulletsToRemove = new ArrayList<Bullet>();
+                List<IBullet> bulletsToRemove = new ArrayList<IBullet>();
 
                 for (Bullet bullet : bullets) {
 
@@ -118,7 +118,6 @@ public class Game {
                     bullet.increaseLifetime();
 
                     if (bullet.getLifeTime() < bulletLifetime) {
-
 
                         for (int i = 0; i < bulletChecks; ++i) {
 
@@ -131,33 +130,39 @@ public class Game {
                             for (Block block : nearbyBlocks) {
                                 BoundingBox boundingBox = block.getBoundingBox();
 
-                                if (plugin.getDebug()) particleHighLightBoundingBox(Particle.DRIP_WATER, block.getWorld(), block.getBoundingBox());
-                            
+                                if (plugin.getDebug())
+                                    particleHighLightBoundingBox(Particle.DRIP_WATER, block.getWorld(),
+                                            block.getBoundingBox());
+
                                 if (intersectsRay(bullet.getLocation(), bullet.getDirection(), boundingBox)) {
-                                    if (plugin.getDebug()) particleHighLightBoundingBox(Particle.DRIP_LAVA, block.getWorld(), boundingBox);
+                                    if (plugin.getDebug())
+                                        particleHighLightBoundingBox(Particle.DRIP_LAVA, block.getWorld(), boundingBox);
                                     bullet.setLifetime(bulletLifetime);
                                     bullet.setActive(false);
                                 }
                             }
 
-                            
-
-                            
                             // Remove if hit player
                             if (bullet.getLifeTime() < bulletLifetime && bullet.isActive()) {
                                 for (Player player : players) {
                                     BoundingBox boundingBox = player.getBoundingBox();
-        
-                                    if (plugin.getDebug()) particleHighLightBoundingBox(Particle.DRIP_WATER, player.getWorld(), player.getBoundingBox());
-                                
-                                    if (intersectsRay(bullet.getLocation(), bullet.getDirection(), boundingBox) &&
-                                        player != bullet.getPlayer() && (
-                                            bullet.getLocation().distance(player.getLocation().add(0, 1, 0)) <= 1.5 ||
-                                            bullet.getLocation().distance(player.getLocation().add(0, 2, 0)) <= 1.5)) {
 
-                                        if (plugin.getDebug()) particleHighLightBoundingBox(Particle.DRIP_LAVA, player.getWorld(), boundingBox);
+                                    if (plugin.getDebug())
+                                        particleHighLightBoundingBox(Particle.DRIP_WATER, player.getWorld(),
+                                                player.getBoundingBox());
 
-                                        if (!bullet.getkilledPlayers().contains(player) && !player.isDead() && bullet.getLifeTime() < bulletLifetime) {
+                                    if (intersectsRay(bullet.getLocation(), bullet.getDirection(), boundingBox)
+                                            && player != bullet.getPlayer()
+                                            && (bullet.getLocation().distance(player.getLocation().add(0, 1, 0)) <= 1.5
+                                                    || bullet.getLocation()
+                                                            .distance(player.getLocation().add(0, 2, 0)) <= 1.5)) {
+
+                                        if (plugin.getDebug())
+                                            particleHighLightBoundingBox(Particle.DRIP_LAVA, player.getWorld(),
+                                                    boundingBox);
+
+                                        if (!bullet.getkilledPlayers().contains(player) && !player.isDead()
+                                                && bullet.getLifeTime() < bulletLifetime) {
                                             kill(bullet, player);
                                         }
                                     }
@@ -165,16 +170,17 @@ public class Game {
 
                                 // Particles
                                 if (i % bulletParticleNum == 0) {
-                                    bullet.getPlayer().getWorld().spawnParticle(Particle.END_ROD, bullet.getLocation(), 1, 0, 0, 0, 0.005, null, true);
+                                    bullet.getPlayer().getWorld().spawnParticle(Particle.END_ROD, bullet.getLocation(),
+                                            1, 0, 0, 0, 0.005, null, true);
                                 } else {
-                                    bullet.getPlayer().getWorld().spawnParticle(Particle.END_ROD, bullet.getLocation(), 1, 0, 0, 0, 0.005, null, false);
+                                    bullet.getPlayer().getWorld().spawnParticle(Particle.END_ROD, bullet.getLocation(),
+                                            1, 0, 0, 0, 0.005, null, false);
                                 }
-                        
+
                             }
 
-                          
-                        }                  
-                        
+                        }
+
                     } else {
                         bulletsToRemove.add(bullet);
                     }
@@ -186,7 +192,7 @@ public class Game {
         }.runTaskTimer(plugin, 0, 1);
 
         new BukkitRunnable() {
-            public void run(){
+            public void run() {
                 scoreboards.entrySet().forEach(entry -> {
                     entry.getValue().updateScoreboard();
                 });
@@ -200,23 +206,21 @@ public class Game {
             winScore = 5;
             playersToStart = 1;
         }
-      
+
     }
 
-
     public void soundForAllPlayers(Player origin, Sound sound) {
-        for (Player p: players){
+        for (Player p : players) {
             double volume = 2.0 * 1 - (origin.getLocation().distance(p.getLocation()) / 15);
             p.getWorld().playSound(origin.getLocation(), sound, (float) volume, 1);
         }
     }
 
-
     public void join(Player player) {
 
         // Player meta
         player.setGameMode(GameMode.SURVIVAL);
-        ((PlayerInventory)player.getInventory()).clear();
+        ((PlayerInventory) player.getInventory()).clear();
         player.setWalkSpeed(0.4f);
 
         // Delay giving bed to not leave immediately
@@ -226,7 +230,7 @@ public class Game {
                 player.getInventory().addItem(new ItemStack(Material.WOODEN_HOE));
                 player.getInventory().addItem(new ItemStack(Material.GREEN_BED));
             }
-            
+
         }.runTaskLater(this.plugin, 5);
 
         players.add(player);
@@ -238,15 +242,17 @@ public class Game {
         scoreboards.put(player, new CustomScoreboard(plugin, player));
         players.forEach((p) -> scoreboards.get(p).update("&6&lQuake2", getScoreboardList(), true));
 
-
         // Random spawn point
         Location spawnPoint = new Teleport(plugin, player).getSpawnPoint(arena, players);
-        if (spawnPoint != null) player.teleport(spawnPoint);
+        if (spawnPoint != null)
+            player.teleport(spawnPoint);
 
         // Announce
         FileConfiguration conf = plugin.getConfig();
-        new Message().sendToAll(plugin.getServer(), "f", "(" + String.valueOf(players.size()) + " / " + String.valueOf(conf.getInt("arenas."+arena+".maxplayers")) + ") " + player.getDisplayName() + " joined the arena: " + arena);         
-
+        new Message().sendToAll(plugin.getServer(), "f",
+                "(" + String.valueOf(players.size()) + " / "
+                        + String.valueOf(conf.getInt("arenas." + arena + ".maxplayers")) + ") "
+                        + player.getDisplayName() + " joined the arena: " + arena);
 
         // Start game
         if (players.size() >= playersToStart && !gameCountDownStarted) {
@@ -256,7 +262,7 @@ public class Game {
 
                 int i = fastTimer ? 5 : 31;
 
-                @Override 
+                @Override
                 public void run() {
                     // Play sound
                     if (i <= 11) {
@@ -266,7 +272,7 @@ public class Game {
 
                     // Reset if not enough players
                     if (players.size() < playersToStart) {
-                        i = 31; 
+                        i = 31;
                         this.cancel();
                         return;
                     }
@@ -276,24 +282,33 @@ public class Game {
                         i = 21;
                     }
 
-                    i--;  
-                        
+                    i--;
+
                     if (i >= 11) {
-                        players.forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&6&l" + String.valueOf(i) + " seconds to game start"))));
+                        players.forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                                TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
+                                        "&6&l" + String.valueOf(i) + " seconds to game start"))));
 
                     } else if (i > 0 && i != 1) {
-                        players.forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&c&l" + String.valueOf(i) + " seconds to game start"))));
+                        players.forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                                TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
+                                        "&c&l" + String.valueOf(i) + " seconds to game start"))));
 
                     } else if (i == 1) {
-                        players.forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&c&l" + String.valueOf(i) + " second to game start"))));
+                        players.forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                                TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
+                                        "&c&l" + String.valueOf(i) + " second to game start"))));
 
                     } else if (i == 0) {
-                        players.forEach((p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&2&lThe game has started!"))));
+                        players.forEach(
+                                (p) -> p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
+                                        ChatColor.translateAlternateColorCodes('&', "&2&lThe game has started!"))));
                         players.forEach((p) -> {
                             Location spawnPoint = new Teleport(plugin, player).getSpawnPoint(arena, players);
-                            if (spawnPoint != null) p.teleport(spawnPoint);
+                            if (spawnPoint != null)
+                                p.teleport(spawnPoint);
                         });
-                      
+
                         gameRunning = true;
                         this.cancel();
                         return;
@@ -302,13 +317,13 @@ public class Game {
 
             }.runTaskTimer(plugin, 0L, 20L);
         }
-        
+
     }
 
     public void leave(Player player) {
         if (players.contains(player)) {
             // Announce
-            new Message().sendToAll(plugin.getServer(), "f", player.getDisplayName() + " left the arena: " + arena); 
+            new Message().sendToAll(plugin.getServer(), "f", player.getDisplayName() + " left the arena: " + arena);
 
             // Player meta
             player.setWalkSpeed(0.2f);
@@ -335,7 +350,6 @@ public class Game {
                 gameCountDownStarted = false;
             }
 
-
             if (players.size() == 0) {
                 gameRunning = false;
                 gameWon = false;
@@ -350,9 +364,10 @@ public class Game {
 
             // Move to lobby
             Location spawnPoint = new Teleport(plugin, player).getLobby();
-            if (spawnPoint != null) player.teleport(spawnPoint);       
+            if (spawnPoint != null)
+                player.teleport(spawnPoint);
         }
-        
+
     }
 
     public void win(Player player) {
@@ -362,6 +377,7 @@ public class Game {
         // Gigantic fireworks
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int i = 0;
+
             public void run() {
                 i++;
 
@@ -372,32 +388,31 @@ public class Game {
                 } else {
                     return;
                 }
-               
+
             }
         }, 0L, 20L);
-        
 
         // Announce
         new Message().sendTitleToPlayerGroup(plugin.getServer(), players, "§6Winner", player.getDisplayName());
 
-        new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7", new Message().centerMessage("-----------------------------------------------------"));
+        new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7",
+                new Message().centerMessage("-----------------------------------------------------"));
         new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7", "");
-        new Message().sendToPlayerGroup(plugin.getServer(), players, false, "f", new Message().centerMessage("&6&l&nTOP 3"));
+        new Message().sendToPlayerGroup(plugin.getServer(), players, false, "f",
+                new Message().centerMessage("&6&l&nTOP 3"));
         new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7", "");
 
-        kills.entrySet().stream()
-        .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
-        .limit(3)
-        .forEach(k -> {
+        kills.entrySet().stream().sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue())).limit(3).forEach(k -> {
             Player key = k.getKey();
             Integer killCount = k.getValue();
-        
-            new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7", new Message().centerMessage(key.getDisplayName() + ": " + killCount + " kills"));
+
+            new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7",
+                    new Message().centerMessage(key.getDisplayName() + ": " + killCount + " kills"));
 
         });
-        new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7", new Message().centerMessage("-----------------------------------------------------"));
+        new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7",
+                new Message().centerMessage("-----------------------------------------------------"));
         new Message().sendToPlayerGroup(plugin.getServer(), players, false, "7", "");
-
 
         // Leave all
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -407,12 +422,12 @@ public class Game {
                     gameWon = false;
                     gameCountDownStarted = false;
                     firstKill = true;
-    
+
                     // Leave
                     List<Player> newList = new ArrayList<Player>(players);
                     newList.forEach((p) -> leave(p));
-    
-                     // Clear lists
+
+                    // Clear lists
                     players.clear();
                     kills.clear();
                     gunTimers.clear();
@@ -420,8 +435,8 @@ public class Game {
                     scoreboards.clear();
                 }
             }
-        }, 20*7);
-       
+        }, 20 * 7);
+
     }
 
     public void kill(Bullet bullet, Player playerHit) {
@@ -430,9 +445,9 @@ public class Game {
 
         // Save to kills hashmap
         kills.put(bullet.getPlayer(), kills.get(bullet.getPlayer()) + 1);
-   
+
         // Update scoreboards
-        players.forEach((player) -> scoreboards.get(player).update("&6&lQuake2", getScoreboardList())); 
+        players.forEach((player) -> scoreboards.get(player).update("&6&lQuake2", getScoreboardList()));
 
         // Kill player
         playerHit.setHealth(0);
@@ -441,33 +456,35 @@ public class Game {
         new Fireworks(plugin, playerHit.getWorld(), playerHit.getLocation()).spawnDeath();
 
         // Broadcast
-        new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", bullet.getPlayer().getDisplayName() + " dissolved " + playerHit.getDisplayName());         
+        new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c",
+                bullet.getPlayer().getDisplayName() + " dissolved " + playerHit.getDisplayName());
 
         // First kill
         if (firstKill) {
-            new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lFIRST BLOOD");         
+            new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lFIRST BLOOD");
             firstKill = false;
         }
 
         // Sniper
         if (gunTimers.get(bullet.getPlayer()) < 5) {
-            new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lSNIPER");  
+            new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lSNIPER");
         }
-        
+
         // Add killed players to bullet
         bullet.addKilledPlayer(playerHit);
 
         // Display potential achievement
         switch (bullet.getkilledPlayers().size()) {
-            case 1: break;            
-            case 2:
-                new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lDOUBLE KILL");      
+            case 1:
                 break;
-            case 3: 
-                new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lTRIPLE KILL");         
-                break; 
-            default: 
-                new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lMULTI KILL!!!!! CHAMPION!!");         
+            case 2:
+                new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lDOUBLE KILL");
+                break;
+            case 3:
+                new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lTRIPLE KILL");
+                break;
+            default:
+                new Message().sendToPlayerGroup(plugin.getServer(), players, true, "c", "&lMULTI KILL!!!!! CHAMPION!!");
                 break;
         }
 
@@ -476,12 +493,6 @@ public class Game {
             win(bullet.getPlayer());
         }
     }
-
-
-
-
-
-
 
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
@@ -497,16 +508,18 @@ public class Game {
         if (players.contains(player)) {
             if (!gameRunning) {
                 Location spawnPoint = new Teleport(plugin, player).getLobby();
-                if (spawnPoint != null) event.setRespawnLocation(spawnPoint);
+                if (spawnPoint != null)
+                    event.setRespawnLocation(spawnPoint);
             } else {
                 Location spawnPoint = new Teleport(plugin, player).getSpawnPoint(arena, players);
-                if (spawnPoint != null) event.setRespawnLocation(spawnPoint);
+                if (spawnPoint != null)
+                    event.setRespawnLocation(spawnPoint);
             }
         }
-       
+
     }
 
-    //Stop players from dropping items
+    // Stop players from dropping items
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
 
@@ -521,16 +534,12 @@ public class Game {
 
         if (players.contains(player)) {
 
-        
             event.setCancelled(true);
-        
+
             // Leave
-            if (material == Material.GREEN_BED && (
-                event.getAction() == Action.LEFT_CLICK_AIR || 
-                event.getAction() == Action.LEFT_CLICK_BLOCK || 
-                event.getAction() == Action.RIGHT_CLICK_AIR || 
-                event.getAction() == Action.RIGHT_CLICK_BLOCK
-            )) {
+            if (material == Material.GREEN_BED && (event.getAction() == Action.LEFT_CLICK_AIR
+                    || event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR
+                    || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
                 leave(player);
             }
 
@@ -540,22 +549,22 @@ public class Game {
                     soundForAllPlayers(player, Sound.ENTITY_ENDER_DRAGON_FLAP);
 
                     double pitch = ((player.getLocation().getPitch() + 90) * Math.PI) / 180;
-                    double yaw = ((player.getLocation().getYaw() + 90)  * Math.PI) / 180;
+                    double yaw = ((player.getLocation().getYaw() + 90) * Math.PI) / 180;
 
-                    double x = Math.cos(yaw) * Math.sin(pitch); 
+                    double x = Math.cos(yaw) * Math.sin(pitch);
                     double z = Math.sin(yaw) * Math.sin(pitch);
                     double y = Math.cos(pitch);
 
                     Vector vector = new Vector(x, y, z);
 
-                    //Rocket jump or fly
+                    // Rocket jump or fly
                     if (event.getAction() == Action.LEFT_CLICK_AIR) {
                         vector.multiply(1.2);
                     } else {
-                        vector = new Vector(x, y*0.5, z);
+                        vector = new Vector(x, y * 0.5, z);
                         vector.multiply(-2.2);
                     }
-                   
+
                     player.setVelocity(vector);
 
                     flyBoostTimers.put(player, defaultFlyBoostTimer);
@@ -564,34 +573,34 @@ public class Game {
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
                 }
             }
-    
+
             // Shoot
-            if (material == Material.WOODEN_HOE && 
-                gunTimers.get(player) == 0 && 
-                (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) && 
-                gameRunning && !gameWon) {
-    
-    
+            if (material == Material.WOODEN_HOE && gunTimers.get(player) == 0
+                    && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    && gameRunning && !gameWon) {
+
                 // Set timer
                 gunTimers.put(player, defaultGunTimer);
-    
+
                 // Sound
                 soundForAllPlayers(player, Sound.ENTITY_FIREWORK_ROCKET_LAUNCH);
-    
+
                 // Vector stuff
                 final Location loc = player.getEyeLocation();
                 final Vector vector = loc.getDirection().normalize().multiply(bulletSpeed);
-     
+
                 bullets.add(new Bullet(player, loc, vector));
-    
-            } else if (material == Material.WOODEN_HOE && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) &&
-                       (gameWon || !gameRunning)) {
+
+            } else if (material == Material.WOODEN_HOE
+                    && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                    && (gameWon || !gameRunning)) {
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 2, 1);
-                new Message().sendToPlayer(player, "7", "The game has not started");         
-            
-            } else if (material == Material.WOODEN_HOE && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+                new Message().sendToPlayer(player, "7", "The game has not started");
+
+            } else if (material == Material.WOODEN_HOE
+                    && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
                 player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 2, 1);
-      
+
             }
         }
 
@@ -606,23 +615,17 @@ public class Game {
         }
     }
 
-
-
-
-
-
-
     public List<Block> getNearbyBlocks(Location location, int radius) {
         List<Block> foundBlocks = new ArrayList<Block>();
 
-        for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-            for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-                for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
+        for (int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
+            for (int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
+                for (int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
                     Block block = location.getWorld().getBlockAt(x, y, z);
                     if (!new MaterialLists().getBulletBypassMaterials().contains(block.getType())) {
                         foundBlocks.add(block);
                     }
-                   
+
                 }
             }
         }
@@ -644,30 +647,21 @@ public class Game {
 
     public List<String> getScoreboardList() {
         List<String> list = new ArrayList<String>();
-       
+
         list.add("&c&lKills");
 
-        kills.entrySet().stream()
-            .sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue()))
-            .forEach(k -> {
-                Player key = k.getKey();
-                Integer killCount = k.getValue();
-            
-                list.add(key.getDisplayName() + ": &e" + killCount);
-            });
+        kills.entrySet().stream().sorted((k1, k2) -> -k1.getValue().compareTo(k2.getValue())).forEach(k -> {
+            Player key = k.getKey();
+            Integer killCount = k.getValue();
+
+            list.add(key.getDisplayName() + ": &e" + killCount);
+        });
 
         list.add("--------------");
         list.add("&2&lMap: &r" + arena);
 
         return list;
     }
-
-    
-
-
-
-
-
 
     public void particleHighLightBoundingBox(Particle particle, World world, BoundingBox box) {
         world.spawnParticle(particle, box.getMaxX(), box.getMaxY(), box.getMaxZ(), 2, 0, 0, 0, 0.001);
@@ -695,20 +689,19 @@ public class Game {
         float tmax = Math.min(Math.min(Math.max(t1, t2), Math.max(t3, t4)), Math.max(t5, t6));
 
         // if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
-        if (tmax < 0)
-        {
+        if (tmax < 0) {
             t = tmax;
             return false;
         }
 
         // if tmin > tmax, ray doesn't intersect AABB
-        if (tmin > tmax)
-        {
+        if (tmin > tmax) {
             t = tmax;
             return false;
         }
 
-        // if tmin < 0 then the ray origin is inside of the AABB and tmin is behind the start of the ray so tmax is the first intersection
+        // if tmin < 0 then the ray origin is inside of the AABB and tmin is behind the
+        // start of the ray so tmax is the first intersection
         if (tmin < 0) {
             t = tmax;
         } else {

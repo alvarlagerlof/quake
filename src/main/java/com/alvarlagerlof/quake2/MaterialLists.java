@@ -2,13 +2,13 @@ package com.alvarlagerlof.quake2;
 
 import org.bukkit.Material;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 public class MaterialLists {
 
-    public List<Material> getPressurePlateMaterials() {
-        List<Material> materials = new ArrayList<Material>();
+    public Set<Material> getPressurePlateMaterials() {
+        Set<Material> materials = new HashSet<Material>();
 
         materials.add(Material.TRIPWIRE);
         materials.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE);
@@ -27,8 +27,8 @@ public class MaterialLists {
         return materials;
     }
 
-    public List<Material> getBulletBypassMaterials() {
-        List<Material> materials = new ArrayList<Material>();
+    public Set<Material> getBulletBypassMaterials() {
+        Set<Material> materials = new HashSet<Material>();
 
         materials.add(Material.AIR);
         materials.add(Material.WATER);

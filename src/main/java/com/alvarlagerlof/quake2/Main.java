@@ -3,6 +3,7 @@ package com.alvarlagerlof.quake2;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -13,15 +14,11 @@ import co.aikar.commands.PaperCommandManager;
 
 import com.alvarlagerlof.quake2.Commands.*;
 
-
-
 public final class Main extends JavaPlugin implements Listener {
 
     public Set<Game> games = new HashSet<>();
 
-
     public void onEnable() {
-
 
         // Test game
         games.add(new Game(this));
@@ -38,14 +35,9 @@ public final class Main extends JavaPlugin implements Listener {
 
     }
 
-
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.getPlayer().sendMessage("test");
-
-        QuakePlayer player = (QuakePlayer) event.getPlayer();
-        player.sendMessage("join game");
-
+        Player player = event.getPlayer();
         games.stream().findFirst().get().join(player);
         // todo: Tp to lobby
     }
@@ -55,5 +47,4 @@ public final class Main extends JavaPlugin implements Listener {
         e.setDeathMessage(null);
     }
 
-}                                    
-
+}
