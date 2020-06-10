@@ -1,4 +1,4 @@
-package com.alvarlagerlof.quakeplugin;
+package com.alvarlagerlof.quake2;
 
 //import static org.junit.Assert.assertTrue;
 

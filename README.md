@@ -1,5 +1,5 @@
-# 🔫 Quake
-Quake is a Spigot plugin that aims to provide Quake-like gameplay in Sigot servers.
+# 🔫 Quake2
+Quake2 is a Spigot plugin that aims to provide Quake2-like gameplay in Sigot servers.
 
 ## Installation
 TBD

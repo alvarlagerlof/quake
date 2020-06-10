@@ -5,8 +5,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.alvarlagerlof.quakeplugin</groupId>
-  <artifactId>Quake</artifactId>
+  <groupId>com.alvarlagerlof.quake2</groupId>
+  <artifactId>Quake2</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <properties>
@@ -91,7 +91,7 @@
             <relocations>
               <relocation>
                 <pattern>co.aikar.commands</pattern>
-                <shadedPattern>com.alvarlagerlof.quakeplugin.acf</shadedPattern> <!-- Replace this -->
+                <shadedPattern>com.alvarlagerlof.quake2.acf</shadedPattern> <!-- Replace this -->
               </relocation>
             </relocations>
         </configuration>
