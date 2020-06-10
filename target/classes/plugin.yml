@@ -2,3 +2,23 @@ main: com.alvarlagerlof.quakeplugin.Main
 name: Quake
 version: 0.1
 api-version: 1.14
+commands:
+  quake:
+    description: Quake
+    aliases:
+      - q
+    permission: quake.admin
+    permission-message: You do not have permission!
+    usage: /<quake>
+  quakesetup:
+    description: Quake Setup
+    aliases:
+      - qsetup
+      - qs
+    permission: quake.admin
+    permission-message: You do not have permission!
+    usage: /<quakesetup>
+permissions:
+  quake.admin:
+    description: Allows all commands
+    default: op

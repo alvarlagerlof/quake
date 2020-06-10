@@ -15,13 +15,16 @@ com/alvarlagerlof/quakeplugin/Teleport.class
 com/alvarlagerlof/quakeplugin/QSetupCommand$Lobby.class
 com/alvarlagerlof/quakeplugin/SignHandler.class
 com/alvarlagerlof/quakeplugin/Game$3.class
+com/alvarlagerlof/quakeplugin/QSetupCommand$Debug.class
 com/alvarlagerlof/quakeplugin/PressurePlateHandler.class
 com/alvarlagerlof/quakeplugin/Fireworks$1.class
 com/alvarlagerlof/quakeplugin/PressurePlateHandler$2.class
 com/alvarlagerlof/quakeplugin/QSetupCommand$Spawnpoints.class
 com/alvarlagerlof/quakeplugin/QSetupCommand$Arenas.class
+com/alvarlagerlof/quakeplugin/DefaultFontInfo.class
 com/alvarlagerlof/quakeplugin/Game.class
 com/alvarlagerlof/quakeplugin/Fireworks.class
 com/alvarlagerlof/quakeplugin/CustomScoreboard.class
 com/alvarlagerlof/quakeplugin/MaterialLists.class
+com/alvarlagerlof/quakeplugin/PressurePlateHandler$3.class
 com/alvarlagerlof/quakeplugin/Game$5.class

@@ -35,6 +35,8 @@ public final class Main extends JavaPlugin implements Listener {
     SignHandler signHandler;
     PressurePlateHandler pressurePlateHandler;
 
+    Boolean debug = false;
+
     public void onEnable() {
 
         // Enable our class to check for new players using onPlayerJoin()
@@ -63,6 +65,17 @@ public final class Main extends JavaPlugin implements Listener {
         }, 0L, 1L);
 
     }
+
+    public void setDebug(Boolean debug) {
+        this.debug = debug;
+        pressurePlateHandler.updateDebug();
+        games.entrySet().forEach(entry -> entry.getValue().updateDebug());
+    }
+
+    public Boolean getDebug() {
+        return this.debug;
+    }
+
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {

@@ -23,10 +23,10 @@ import com.alvarlagerlof.quakeplugin.Message;
 
 
 public class SignHandler {
-    JavaPlugin plugin;
+    Main plugin;
     HashMap<String, Game> games;
 
-    public SignHandler(JavaPlugin plugin) {
+    public SignHandler(Main plugin) {
         this.plugin = plugin;
     }
 
@@ -107,9 +107,8 @@ public class SignHandler {
 
                     // Create game if does not exist
                     if (!games.containsKey(sign.getLines()[2])) {
-                        //new Message().sendToPlayer(player, "c", "Game " + sign.getLines()[2] + "does not exit, creating");
-                        //new Message().sendToPlayer(player, "c", "Game " + games.toString());
-                        games.put(sign.getLines()[2], new Game(plugin, sign.getLines()[2]));
+                        if (plugin.getDebug()) new Message().sendToPlayer(player, "c", "Game " + sign.getLines()[2] + "does not exit, creating");
+                        games.put(sign.getLines()[2], new Game(plugin, sign.getLines()[2], plugin.getDebug()));
                     }
 
                     // Check if already is on arena

@@ -9,22 +9,29 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.Syntax;
+import io.netty.util.internal.PlatformDependent;
 import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.CommandPermission;
 
 import java.util.List;
+import java.security.KeyStoreSpi;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.alvarlagerlof.quakeplugin.Message;
 
 
-@CommandAlias("qsetup|quakesetup")
+@CommandAlias("qsetup|quakesetup|qs")
+@CommandPermission("quake.admin")
 public class QSetupCommand extends BaseCommand {
 
-    JavaPlugin plugin;
+    Main plugin;
     FileConfiguration conf;
 
-    public QSetupCommand(JavaPlugin plugin) {
+    public QSetupCommand(Main plugin) {
         this.plugin = plugin;
         this.conf = plugin.getConfig();
     }
@@ -51,7 +58,23 @@ public class QSetupCommand extends BaseCommand {
     
             new Message().sendToPlayer(player, "f", "Lobby postition updated");
         }
+    }
 
+    @Subcommand("debug")
+    public class Debug extends BaseCommand {
+
+        @Subcommand("on")
+        public void enableDebug(Player player) {
+            plugin.setDebug(true);
+            new Message().sendToPlayer(player, "f", "Debug: ON");
+
+        }
+
+        @Subcommand("off")
+        public void disableDebug(Player player) {
+            plugin.setDebug(false);
+            new Message().sendToPlayer(player, "f", "Debug: OFF");
+        }
     }    
 
     @Subcommand("arenas")
@@ -230,64 +253,93 @@ public class QSetupCommand extends BaseCommand {
 
     @Subcommand("pp|pressureplates")
     public class PressurePlates extends BaseCommand {
+   
+        @Subcommand("set replace")
+        public void doSetReplacePressurePlate(Player player, String[] args) {
+            if (args.length == 0) {
+                new Message().sendToPlayer(player, "f", "order: x y z");
+            } else {
+                String base = getBase(player);
 
-        @Subcommand("write")
-        public void doWritePressurePlate(Player player, String[] args) {
-        
+                // Write
+                conf.set(base+".world", player.getWorld().getName());
+                conf.set(base+".x", (int) Math.floor(player.getLocation().getX()));
+                conf.set(base+".y", (int) Math.floor(player.getLocation().getY()));
+                conf.set(base+".z", (int) Math.floor(player.getLocation().getZ()));
+                conf.set(base+".effectType", "replace");
+                conf.set(base+".effectData.x", args[0]);
+                conf.set(base+".effectData.y", args[1]);
+                conf.set(base+".effectData.z", args[2]);
+
+                plugin.saveConfig();
+
+                new Message().sendToPlayer(player, "f", getNearsetKey(player) == null ? "Boost pad created" : "Boost pad overwritten");
+            }
+        }
+
+        @Subcommand("set add")
+        public void doSetAddPressurePlate(Player player, String[] args) {
+            if (args.length == 0) {
+                new Message().sendToPlayer(player, "f", "order: factor upforce");
+            } else {
+                String base = getBase(player);
+
+                // Write
+                conf.set(base+".world", player.getWorld().getName());
+                conf.set(base+".x", (int) Math.floor(player.getLocation().getX()));
+                conf.set(base+".y", (int) Math.floor(player.getLocation().getY()));
+                conf.set(base+".z", (int) Math.floor(player.getLocation().getZ()));
+                conf.set(base+".effectType", "add");
+                conf.set(base+".effectData.factor", args[0]);
+                conf.set(base+".effectData.upforce", args[1]);
+                plugin.saveConfig();
+
+                new Message().sendToPlayer(player, "f", getNearsetKey(player) == null ? "Boost pad created" : "Boost pad overwritten");
+            }
+            
+        }       
+
+        public String getBase(Player player) {
+            Set<String> keys = conf.getConfigurationSection("pressureplates").getKeys(false);
+            List<String> keySorted = keys.stream().collect(Collectors.toList());
+            Integer lastKeyNum = Integer.parseInt(keySorted.get(keySorted.size() - 1));
+
+            String keyAtPlayerLocation = getNearsetKey(player);
+            String base = "pressureplates.";
+
+            if (plugin.getDebug()) player.sendMessage("base: " + lastKeyNum.toString());
+
+            if (!conf.contains("pressureplates")) {
+                return base + "1";
+            } else if (keyAtPlayerLocation == null) {
+                return base + String.valueOf(lastKeyNum+1);
+            } else {
+                return base + String.valueOf(keyAtPlayerLocation);
+            }
+        }
+
+
+        public String getNearsetKey(Player player) {
             Location loc = player.getLocation();
 
-            // # of pressureplates
-            int size = 0;
-            String keyAtPlayerLocation = null;
 
             if (conf.contains("pressureplates")) {
-                size = conf.getConfigurationSection("pressureplates").getKeys(false).size();
 
                  // If pressureplate is saved
                 Set<String> set = conf.getConfigurationSection("pressureplates").getKeys(false);
                 List<String> keys = new ArrayList<String>(set);
 
-                
                 for (String key : keys) {
                     if (conf.getInt("pressureplates."+key+".x") == (int) Math.floor(loc.getX()) && 
                         conf.getInt("pressureplates."+key+".y") == (int) Math.floor(loc.getY()) && 
                         conf.getInt("pressureplates."+key+".z") == (int) Math.floor(loc.getZ())) {
-                        keyAtPlayerLocation = key;
+                        return key;
                     }
                 }
             }
 
-           
-            
-            // Create base
-            String base = "pressureplates.";
-
-            if (!conf.contains("pressureplates")) {
-                base += "1";
-            } else if (keyAtPlayerLocation == null) {
-                base += String.valueOf(size+1);
-            } else {
-                base += String.valueOf(keyAtPlayerLocation);
-            }
-
-            // Write
-            conf.set(base+".world", player.getWorld().getName());
-            conf.set(base+".x", (int) Math.floor(loc.getX()));
-            conf.set(base+".y", (int) Math.floor(loc.getY()));
-            conf.set(base+".z", (int) Math.floor(loc.getZ()));
-            conf.set(base+".effects", String.join(" ", args));
-            plugin.saveConfig();
-
-            new Message().sendToPlayer(player, "f", keyAtPlayerLocation == null ? "Boost pad created" : "Boost pad overwritten");
-        
+            return null;
         }
-
-        // @Subcommand("clear")
-        // public void doDeletePressurePlate(Player player, String[] args) {
-        
-          
-        
-        // }
 
     }
 

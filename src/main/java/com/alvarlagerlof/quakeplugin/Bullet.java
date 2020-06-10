@@ -12,6 +12,7 @@ public class Bullet {
     Location location;
     Vector direction;
     Integer lifetime;
+    Boolean active;
     List<Player> killedPlayers;
 
     public Bullet(Player player, Location location, Vector direction) {
@@ -19,6 +20,7 @@ public class Bullet {
         this.location = location;
         this.direction = direction;
         this.lifetime = 0;
+        this.active = true;
         this.killedPlayers = new ArrayList<Player>();
     }
   
@@ -46,12 +48,20 @@ public class Bullet {
         return this.lifetime;
     }
 
+    public Boolean isActive() {
+        return this.active;
+    }
+
     public void increaseLifetime() {
         this.lifetime++;
     }
 
     public void setLifetime(Integer lifetime) {
         this.lifetime = lifetime;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public List<Player> getkilledPlayers(){
