@@ -10,7 +10,7 @@ com/alvarlagerlof/quake2/AllCommands$Arenas.class
 com/alvarlagerlof/quake2/MaterialLists.class
 com/alvarlagerlof/quake2/ArenaCommand.class
 com/alvarlagerlof/quake2/QuakePlayer.class
-com/alvarlagerlof/quake2/FlyBoostTimer.class
+com/alvarlagerlof/quake2/StatusScoreboard.class
 com/alvarlagerlof/quake2/SoundManager.class
 com/alvarlagerlof/quake2/Weapons/IWeapon.class
 com/alvarlagerlof/quake2/LobbyCommand.class

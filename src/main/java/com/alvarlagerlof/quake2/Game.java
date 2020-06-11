@@ -1,12 +1,17 @@
 package com.alvarlagerlof.quake2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.alvarlagerlof.quake2.Weapons.Shotgun;
 import com.alvarlagerlof.quake2.Weapons.Sniper;
 import com.alvarlagerlof.quake2.Bullets.IBullet;
 import com.alvarlagerlof.quake2.MathUtil;
+import com.alvarlagerlof.quake2.StatusScoreboard;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -28,12 +33,18 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 class Game implements Listener {
+
     Main plugin;
-    public Set<QuakePlayer> players = new HashSet<>();
-    public Set<IBullet> bullets = new HashSet<>();
+    String arena = "Desert";
+    StatusScoreboard scoreboard = new StatusScoreboard("&6&lQUAKE");
+    Set<QuakePlayer> players = new HashSet<>();
+    Set<IBullet> bullets = new HashSet<>();
 
     public Game(Main plugin) {
         this.plugin = plugin;
+
+        updateScoreboard();
+
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
@@ -55,6 +66,9 @@ class Game implements Listener {
         QuakePlayer quakePlayer = new QuakePlayer(player);
         players.add(quakePlayer);
 
+        updateScoreboard();
+        scoreboard.setForPlayer(quakePlayer);
+
         quakePlayer.addWeapon(new Sniper(quakePlayer));
         quakePlayer.addWeapon(new Shotgun(quakePlayer));
         quakePlayer.updateInventory();
@@ -65,17 +79,35 @@ class Game implements Listener {
         player.getPlayer().setExp(0f);
         player.getPlayer().setHealth(20.0);
         player.getPlayer().setWalkSpeed(0.2f);
+
         players.remove(player);
+
+        updateScoreboard();
+        scoreboard.hideForPlayer(player);
     }
 
     public QuakePlayer findPlayer(Player player) {
-        if (player != null || players.size() == 0) {
-            return players.stream().filter(p -> p.getPlayer() == player).findFirst().get();
+        if (player != null && players.size() != 0) {
+            return players.stream().filter(p -> p.getPlayer() == player).findFirst().orElse(null);
         }
         return null;
     }
 
-    public void updateBullets() {
+    void updateScoreboard() {
+        List<String> newContent = new ArrayList<String>();
+        newContent.add("&c&lKills");
+
+        newContent.addAll(players.stream().sorted((p1, p2) -> p2.getKills().compareTo(p1.getKills()))
+                .map(p -> p.getPlayer().getDisplayName() + ": " + p.getKills()).collect(Collectors.toList()));
+
+        newContent.add("------------");
+        newContent.add("&2&lMap: &r" + arena);
+
+        scoreboard.update(newContent);
+        players.forEach(p -> scoreboard.setForPlayer(p));
+    }
+
+    void updateBullets() {
         Set<IBullet> bulletsToRemove = new HashSet<>();
 
         for (IBullet bullet : bullets) {
@@ -96,20 +128,22 @@ class Game implements Listener {
                         Boolean dead = player.hit(bullet);
                         if (dead) {
                             player.getPlayer().setHealth(0);
+                            bullet.getShooter().increaseKills();
+                            updateScoreboard();
                         }
                     }
 
                     bullet.spawnParticle();
                 }
 
-                bullet.getLifetimeTimer().decrease();
-                ;
-
                 if (bullet.getLifetimeTimer().getTime() == 0) {
                     bullet.getLifetimeTimer().set(0);
                     bulletsToRemove.add(bullet);
                 }
             }
+
+            bullet.getLifetimeTimer().decrease();
+
         }
 
         bullets.removeAll(bulletsToRemove);
@@ -125,7 +159,7 @@ class Game implements Listener {
     }
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
+    private void onDeath(PlayerDeathEvent event) {
         // QuakePlayer player = (QuakePlayer) event.getEntity();
         // if (players.contains(player)) {
         // player.sendMessage("you died");
@@ -135,15 +169,16 @@ class Game implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        // QuakePlayer player = (QuakePlayer) event.getPlayer();
-        // if (players.contains(player)) {
-        // player.sendMessage("you quit");
-        // }
+    private void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        QuakePlayer quakePlayer = findPlayer(player);
+        if (quakePlayer != null) {
+            leave(quakePlayer);
+        }
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
+    private void onPlayerRespawn(PlayerRespawnEvent event) {
         // QuakePlayer player = (QuakePlayer) event.getPlayer();
         // if (players.contains(player)) {
         // player.sendMessage("you respawned");
@@ -154,7 +189,7 @@ class Game implements Listener {
     }
 
     @EventHandler
-    public void onHit(EntityDamageByEntityEvent e) {
+    private void onHit(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
             e.setDamage(0.0);
         }
@@ -163,15 +198,13 @@ class Game implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        player.sendMessage("du ska inte droppa saker");
-
         if (findPlayer(player) != null) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onPlayerBreakBlock(BlockBreakEvent event) {
+    private void onPlayerBreakBlock(BlockBreakEvent event) {
         Player player = event.getPlayer();
         if (findPlayer(player) != null) {
             event.setCancelled(true);
@@ -179,7 +212,7 @@ class Game implements Listener {
     };
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    private void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         QuakePlayer quakePlayer = findPlayer(player);
         if (quakePlayer != null) {
@@ -203,7 +236,7 @@ class Game implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    private void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         if (findPlayer(player) != null) {
             event.setKeepInventory(true);
@@ -212,7 +245,7 @@ class Game implements Listener {
     }
 
     @EventHandler
-    public void onPlayerFall(EntityDamageEvent event) {
+    private void onPlayerFall(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             if (findPlayer(player) != null) {

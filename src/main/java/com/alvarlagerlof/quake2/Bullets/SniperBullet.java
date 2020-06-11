@@ -23,7 +23,7 @@ public class SniperBullet implements IBullet {
         this.shooter = shooter;
         this.location = location;
         this.direction = direction;
-        this.lifetimeTimer = new Timer(20);
+        this.lifetimeTimer = new Timer(5);
         this.speed = 40.0;
         this.killedPlayers = new HashSet<>();
     }

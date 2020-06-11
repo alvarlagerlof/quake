@@ -34,6 +34,14 @@ public class QuakePlayer {
         return player;
     }
 
+    public Integer getKills() {
+        return kills;
+    }
+
+    public void increaseKills() {
+        kills++;
+    }
+
     public Boolean isAlive() {
         return !player.isDead();
     }
@@ -54,7 +62,7 @@ public class QuakePlayer {
 
         if (itemInMainHand.getType() != Material.AIR && itemInMainHand.getType() != Material.RED_BED) {
             Material itemInHand = itemInMainHand.getType();
-            return weapons.stream().filter(w -> w.getItem().getType() == itemInHand).findAny().get();
+            return weapons.stream().filter(w -> w.getItem().getType() == itemInHand).findAny().orElse(null);
         }
 
         return null;

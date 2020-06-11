@@ -10,18 +10,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-
 
 public class CustomScoreboard {
 
     List<String> list = new ArrayList<String>();
     String displayName = "";
     ScoreboardManager manager;
-    Scoreboard board; 
+    Scoreboard board;
     Objective objective;
     Player player;
     JavaPlugin plugin;
@@ -42,9 +40,6 @@ public class CustomScoreboard {
         this.displayName = displayName;
         this.list = list;
         this.enabled = enabled;
-
-
-
     }
 
     public void update(String displayName, List<String> list) {
@@ -64,7 +59,7 @@ public class CustomScoreboard {
         }
 
         // Copy and reverse list
-        List<String> reverse = new ArrayList<String>(list); 
+        List<String> reverse = new ArrayList<String>(list);
         Collections.reverse(reverse);
 
         // Set scores
@@ -84,6 +79,6 @@ public class CustomScoreboard {
         oldList = list;
     }
 
+}oldList=list;}
 
 }
- 
