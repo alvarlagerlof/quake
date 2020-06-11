@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.alvarlagerlof.quake2.QuakePlayer;
+import com.alvarlagerlof.quake2.Timer;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -14,7 +15,7 @@ public class ShotgunBullet implements IBullet {
     QuakePlayer shooter;
     Location location;
     Vector direction;
-    Integer lifetime;
+    Timer lifetimeTimer;
     Double speed;
     Set<QuakePlayer> killedPlayers;
 
@@ -22,7 +23,7 @@ public class ShotgunBullet implements IBullet {
         this.shooter = shooter;
         this.location = location;
         this.direction = direction;
-        this.lifetime = 100;
+        this.lifetimeTimer = new Timer(100);
         this.speed = 1.0;
         this.killedPlayers = new HashSet<>();
     }
@@ -47,26 +48,16 @@ public class ShotgunBullet implements IBullet {
         this.direction = direction;
     }
 
-    public Integer getLifetime() {
-        return lifetime;
-    }
-
-    public void setLifetime(Integer lifetime) {
-        this.lifetime = lifetime;
-    }
-
-    public void decreaseLifetime() {
-        if (lifetime > 0) {
-            lifetime--;
-        }
-    }
-
     public Double getSpeed() {
         return speed;
     }
 
     public Set<QuakePlayer> getkilledPlayers() {
         return killedPlayers;
+    }
+
+    public Timer getLifetimeTimer() {
+        return lifetimeTimer;
     }
 
     public void addKilledPlayer(QuakePlayer player) {

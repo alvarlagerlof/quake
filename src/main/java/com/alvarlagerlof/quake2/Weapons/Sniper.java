@@ -10,7 +10,9 @@ import com.alvarlagerlof.quake2.Bullets.ShotgunBullet;
 import com.alvarlagerlof.quake2.Bullets.SniperBullet;
 import com.alvarlagerlof.quake2.QuakePlayer;
 import com.alvarlagerlof.quake2.SoundManager;
+import com.alvarlagerlof.quake2.Timer;
 import com.alvarlagerlof.quake2.Weapons.IWeapon;
+import com.google.common.graph.ElementOrder;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,15 +21,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public class Sniper implements IWeapon {
+    QuakePlayer owner;
 
-    public String name = "Sniper";
-    public List<String> lore = Arrays.asList("1 kula", "Snabb");
+    String name = "Sniper";
+    List<String> lore = Arrays.asList("1 kula", "Snabb");
 
-    public Sound sound = Sound.ENTITY_PIG_DEATH;
+    Sound sound = Sound.ENTITY_PIG_DEATH;
 
-    public ItemStack item = new ItemStack(Material.WOODEN_HOE);
-    public Integer durability = 100;
-    public Integer gunTimer = 80;
+    ItemStack item = new ItemStack(Material.WOODEN_HOE);
+    Integer durability = 100;
+    Timer shootTimer = new Timer(100);
+
+    public Sniper(QuakePlayer player) {
+        this.owner = player;
+    }
 
     public String getName() {
         return name;
@@ -45,20 +52,31 @@ public class Sniper implements IWeapon {
         return sound;
     }
 
-    public void runTimer() {
-        if (gunTimer > 0) {
-            gunTimer--;
-        }
+    public Timer getShootTimer() {
+        return shootTimer;
     }
 
-    public Set<IBullet> shoot(Vector direction, Location location, QuakePlayer shooter, Set<QuakePlayer> gamePlayers) {
-        new SoundManager(shooter.getPlayer().getWorld()).playForGroup(shooter.getPlayer().getLocation(), gamePlayers,
-                sound);
+    public void showTimer() {
+        new WeaponUtils().showActionBar(owner, shootTimer.getResetTime(), shootTimer.getTime());
+    }
 
-        Set<IBullet> set = new HashSet<>();
-        set.add(new SniperBullet(shooter, location, direction));
+    public Set<IBullet> shoot(Vector direction, Location location, Set<QuakePlayer> gamePlayers) {
+        if (shootTimer.getTime() == 0) {
+            shootTimer.reset();
 
-        return set;
+            new SoundManager(owner.getPlayer().getWorld()).playForGroup(owner.getPlayer().getLocation(), gamePlayers,
+                    sound);
+
+            Set<IBullet> set = new HashSet<>();
+            set.add(new SniperBullet(owner, location, direction));
+
+            return set;
+        } else {
+            owner.getPlayer().playSound(owner.getPlayer().getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
+            return new HashSet<>();
+
+        }
+
     }
 
 }

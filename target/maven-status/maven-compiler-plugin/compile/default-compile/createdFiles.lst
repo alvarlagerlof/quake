@@ -2,6 +2,7 @@ com/alvarlagerlof/quake2/SpawnPointCommand.class
 com/alvarlagerlof/quake2/Weapons/Sniper.class
 com/alvarlagerlof/quake2/Game.class
 com/alvarlagerlof/quake2/Bullets/SniperBullet.class
+com/alvarlagerlof/quake2/Weapons/WeaponUtils.class
 com/alvarlagerlof/quake2/MathUtil.class
 com/alvarlagerlof/quake2/PreasurePlateCommand.class
 com/alvarlagerlof/quake2/Game$1.class
@@ -16,6 +17,7 @@ com/alvarlagerlof/quake2/LobbyCommand.class
 com/alvarlagerlof/quake2/EditCommand.class
 com/alvarlagerlof/quake2/AllCommands$PressurePlates.class
 com/alvarlagerlof/quake2/AllCommands.class
+com/alvarlagerlof/quake2/Timer.class
 com/alvarlagerlof/quake2/AllCommands$Spawnpoints.class
 com/alvarlagerlof/quake2/Weapons/Shotgun.class
 com/alvarlagerlof/quake2/Bullets/IBullet.class

@@ -6,6 +6,9 @@ import org.bukkit.util.Vector;
 
 public class MathUtil {
 
+    public MathUtil() {
+    }
+
     public Boolean intersectsRay(Location origin, Vector direction, BoundingBox box) {
         float t = 0f;
 

@@ -12,16 +12,19 @@ import org.bukkit.util.Vector;
 
 import com.alvarlagerlof.quake2.Bullets.IBullet;
 import com.alvarlagerlof.quake2.QuakePlayer;
+import com.alvarlagerlof.quake2.Timer;
 
 public interface IWeapon {
-    public String name = "Basic gun";
-    public List<String> lore = Arrays.asList("lore", "multiline");
+    QuakePlayer owner = null;
 
-    public Sound sound = Sound.AMBIENT_CAVE;
+    String name = "Basic gun";
+    List<String> lore = Arrays.asList("lore", "multiline");
 
-    public ItemStack item = new ItemStack(Material.WOODEN_HOE);
-    public Integer gunTimer = 0;
-    public Integer durability = 0;
+    Sound sound = Sound.AMBIENT_CAVE;
+
+    ItemStack item = new ItemStack(Material.WOODEN_HOE);
+    Timer shootTimer = new Timer(100);
+    Integer durability = 0;
 
     public String getName();
 
@@ -31,8 +34,10 @@ public interface IWeapon {
 
     public Sound getSound();
 
-    public void runTimer();
+    public Timer getShootTimer();
 
-    public Set<IBullet> shoot(Vector direction, Location location, QuakePlayer shooter, Set<QuakePlayer> gamePlayers);
+    public void showTimer();
+
+    public Set<IBullet> shoot(Vector direction, Location location, Set<QuakePlayer> gamePlayers);
 
 }
