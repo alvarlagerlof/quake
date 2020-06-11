@@ -9,11 +9,13 @@
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Timer.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Commands/DefaultCommand.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Commands/PreasurePlateCommand.java
+/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/SidebarScoreboard.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Commands/ArenaCommand.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Commands/EditCommand.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Bullets/ShotgunBullet.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Bullets/SniperBullet.java
-/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/StatusScoreboard.java
+/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Bullets/MachinegunBullet.java
+/home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Weapons/Machinegun.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/QuakePlayer.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/MaterialLists.java
 /home/alvar/git/spigot/quake/src/main/java/com/alvarlagerlof/quake2/Weapons/IWeapon.java

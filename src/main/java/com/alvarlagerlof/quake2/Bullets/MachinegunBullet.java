@@ -10,17 +10,17 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
-public class SniperBullet implements IBullet {
+public class MachinegunBullet implements IBullet {
 
     QuakePlayer shooter;
     Location location;
     Vector direction;
     Timer lifetimeTimer = new Timer(5);
     Double speed = 40.0;
-    Double damage = 10.0;
+    Double damage = 2.0;
     Set<QuakePlayer> killedPlayers = new HashSet<>();
 
-    public SniperBullet(QuakePlayer shooter, Location location, Vector direction) {
+    public MachinegunBullet(QuakePlayer shooter, Location location, Vector direction) {
         this.shooter = shooter;
         this.location = location;
         this.direction = direction;
@@ -67,6 +67,6 @@ public class SniperBullet implements IBullet {
     }
 
     public void spawnParticle() {
-        shooter.getPlayer().getWorld().spawnParticle(Particle.END_ROD, location, 1, 0, 0, 0, 0.005, null, true);
+        shooter.getPlayer().getWorld().spawnParticle(Particle.SMOKE_NORMAL, location, 1, 0, 0, 0, 0.001, null, true);
     }
 }

@@ -116,7 +116,10 @@ public class QuakePlayer {
 
                 if (!bullet.getkilledPlayers().contains(this) && !player.isDead()
                         && bullet.getLifetimeTimer().getTime() > 0) {
-                    return true;
+                    player.setHealth(player.getHealth() - bullet.getDamage());
+                    if (player.isDead()) {
+                        return true;
+                    }
                 }
             }
         }

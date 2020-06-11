@@ -13,7 +13,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-public class StatusScoreboard {
+public class SidebarScoreboard {
 
     String name;
     List<String> content;
@@ -22,7 +22,7 @@ public class StatusScoreboard {
     Scoreboard board;
     Objective objective;
 
-    public StatusScoreboard(String name) {
+    public SidebarScoreboard(String name) {
         this.name = name;
 
         reset();

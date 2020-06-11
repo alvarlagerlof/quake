@@ -9,9 +9,10 @@ import java.util.stream.Collectors;
 
 import com.alvarlagerlof.quake2.Weapons.Shotgun;
 import com.alvarlagerlof.quake2.Weapons.Sniper;
+import com.alvarlagerlof.quake2.Weapons.Machinegun;
 import com.alvarlagerlof.quake2.Bullets.IBullet;
 import com.alvarlagerlof.quake2.MathUtil;
-import com.alvarlagerlof.quake2.StatusScoreboard;
+import com.alvarlagerlof.quake2.SidebarScoreboard;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -36,7 +37,7 @@ class Game implements Listener {
 
     Main plugin;
     String arena = "Desert";
-    StatusScoreboard scoreboard = new StatusScoreboard("&6&lQUAKE");
+    SidebarScoreboard sidebarScoreboard = new SidebarScoreboard("&6&lQUAKE");
     Set<QuakePlayer> players = new HashSet<>();
     Set<IBullet> bullets = new HashSet<>();
 
@@ -67,10 +68,11 @@ class Game implements Listener {
         players.add(quakePlayer);
 
         updateScoreboard();
-        scoreboard.setForPlayer(quakePlayer);
+        sidebarScoreboard.setForPlayer(quakePlayer);
 
         quakePlayer.addWeapon(new Sniper(quakePlayer));
         quakePlayer.addWeapon(new Shotgun(quakePlayer));
+        quakePlayer.addWeapon(new Machinegun(quakePlayer));
         quakePlayer.updateInventory();
     }
 
@@ -83,7 +85,7 @@ class Game implements Listener {
         players.remove(player);
 
         updateScoreboard();
-        scoreboard.hideForPlayer(player);
+        sidebarScoreboard.hideForPlayer(player);
     }
 
     public QuakePlayer findPlayer(Player player) {
@@ -103,8 +105,8 @@ class Game implements Listener {
         newContent.add("------------");
         newContent.add("&2&lMap: &r" + arena);
 
-        scoreboard.update(newContent);
-        players.forEach(p -> scoreboard.setForPlayer(p));
+        sidebarScoreboard.update(newContent);
+        players.forEach(p -> sidebarScoreboard.setForPlayer(p));
     }
 
     void updateBullets() {

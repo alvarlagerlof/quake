@@ -10,7 +10,6 @@ com/alvarlagerlof/quake2/AllCommands$Arenas.class
 com/alvarlagerlof/quake2/MaterialLists.class
 com/alvarlagerlof/quake2/ArenaCommand.class
 com/alvarlagerlof/quake2/QuakePlayer.class
-com/alvarlagerlof/quake2/StatusScoreboard.class
 com/alvarlagerlof/quake2/SoundManager.class
 com/alvarlagerlof/quake2/Weapons/IWeapon.class
 com/alvarlagerlof/quake2/LobbyCommand.class
@@ -20,8 +19,11 @@ com/alvarlagerlof/quake2/AllCommands.class
 com/alvarlagerlof/quake2/Timer.class
 com/alvarlagerlof/quake2/AllCommands$Spawnpoints.class
 com/alvarlagerlof/quake2/Weapons/Shotgun.class
+com/alvarlagerlof/quake2/SidebarScoreboard.class
 com/alvarlagerlof/quake2/Bullets/IBullet.class
+com/alvarlagerlof/quake2/Bullets/MachinegunBullet.class
 com/alvarlagerlof/quake2/DefaultCommand.class
+com/alvarlagerlof/quake2/Weapons/Machinegun.class
 com/alvarlagerlof/quake2/AllCommands$Debug.class
 com/alvarlagerlof/quake2/Bullets/ShotgunBullet.class
 com/alvarlagerlof/quake2/AllCommands$Lobby.class

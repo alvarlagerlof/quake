@@ -15,17 +15,15 @@ public class ShotgunBullet implements IBullet {
     QuakePlayer shooter;
     Location location;
     Vector direction;
-    Timer lifetimeTimer;
-    Double speed;
-    Set<QuakePlayer> killedPlayers;
+    Timer lifetimeTimer = new Timer(100);
+    Double speed = 1.0;
+    Double damage = 15.0;
+    Set<QuakePlayer> killedPlayers = new HashSet<>();
 
     public ShotgunBullet(QuakePlayer shooter, Location location, Vector direction) {
         this.shooter = shooter;
         this.location = location;
         this.direction = direction;
-        this.lifetimeTimer = new Timer(100);
-        this.speed = 1.0;
-        this.killedPlayers = new HashSet<>();
     }
 
     public QuakePlayer getShooter() {
@@ -50,6 +48,10 @@ public class ShotgunBullet implements IBullet {
 
     public Double getSpeed() {
         return speed;
+    }
+
+    public Double getDamage() {
+        return damage;
     }
 
     public Set<QuakePlayer> getkilledPlayers() {

@@ -15,6 +15,7 @@ public interface IBullet {
     Vector direction = null;
     Timer lifetimeTimer = new Timer(100);
     Double speed = null;
+    Double damage = null;
     Set<QuakePlayer> killedPlayers = null;
 
     public QuakePlayer getShooter();
@@ -28,6 +29,8 @@ public interface IBullet {
     public void setDirection(Vector direction);
 
     public Double getSpeed();
+
+    public Double getDamage();
 
     public Timer getLifetimeTimer();
 
