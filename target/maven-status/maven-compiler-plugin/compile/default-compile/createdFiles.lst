@@ -1,4 +1,5 @@
 com/alvarlagerlof/quake2/SpawnPointCommand.class
+com/alvarlagerlof/quake2/HealthScoreboard.class
 com/alvarlagerlof/quake2/Weapons/Sniper.class
 com/alvarlagerlof/quake2/Game.class
 com/alvarlagerlof/quake2/Bullets/SniperBullet.class

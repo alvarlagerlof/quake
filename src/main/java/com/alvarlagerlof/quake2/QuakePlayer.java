@@ -3,6 +3,7 @@ package com.alvarlagerlof.quake2;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -12,6 +13,9 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.bukkit.scoreboard.Scoreboard;
+
+import org.bukkit.entity.LivingEntity;
 
 import com.alvarlagerlof.quake2.QuakePlayer;
 import com.alvarlagerlof.quake2.Timer;
@@ -23,11 +27,13 @@ public class QuakePlayer {
     Player player;
     Integer kills;
     Timer flyBoostTimer = new Timer(20 * 4);
-    public Set<IWeapon> weapons = new HashSet<>();
+    Set<IWeapon> weapons = new HashSet<>();
+    Scoreboard scoreboard;
 
     public QuakePlayer(Player player) {
         this.player = player;
         this.kills = 0;
+        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     }
 
     public Player getPlayer() {
@@ -36,6 +42,10 @@ public class QuakePlayer {
 
     public Integer getKills() {
         return kills;
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
     public void increaseKills() {
@@ -114,9 +124,15 @@ public class QuakePlayer {
                     && (bullet.getLocation().distance(player.getLocation().add(0, 1, 0)) <= 1.5
                             || bullet.getLocation().distance(player.getLocation().add(0, 2, 0)) <= 1.5)) {
 
-                if (!bullet.getkilledPlayers().contains(this) && !player.isDead()
-                        && bullet.getLifetimeTimer().getTime() > 0) {
-                    player.setHealth(player.getHealth() - bullet.getDamage());
+                if (!bullet.getKilledPlayers().contains(this) && !bullet.getHitPlayers().contains(this)
+                        && !player.isDead() && bullet.getLifetimeTimer().getTime() > 0) {
+                    // player.setHealth(player.getHealth() - bullet.getDamage());
+
+                    player.damage(bullet.getDamage());
+                    player.setVelocity(player.getVelocity().add(bullet.getDirection()).add(new Vector(0, 0.4, 0)));
+
+                    bullet.addHitPlayer(this);
+
                     if (player.isDead()) {
                         return true;
                     }

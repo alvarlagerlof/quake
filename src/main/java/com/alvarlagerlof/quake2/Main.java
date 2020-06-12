@@ -42,9 +42,4 @@ public final class Main extends JavaPlugin implements Listener {
         // todo: Tp to lobby
     }
 
-    @EventHandler
-    public void onDeath(PlayerDeathEvent e) {
-        e.setDeathMessage(null);
-    }
-
 }

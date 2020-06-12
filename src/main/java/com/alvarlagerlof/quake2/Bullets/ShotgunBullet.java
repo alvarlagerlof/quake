@@ -19,6 +19,7 @@ public class ShotgunBullet implements IBullet {
     Double speed = 1.0;
     Double damage = 15.0;
     Set<QuakePlayer> killedPlayers = new HashSet<>();
+    Set<QuakePlayer> hitPlayers = new HashSet<>();
 
     public ShotgunBullet(QuakePlayer shooter, Location location, Vector direction) {
         this.shooter = shooter;
@@ -54,7 +55,7 @@ public class ShotgunBullet implements IBullet {
         return damage;
     }
 
-    public Set<QuakePlayer> getkilledPlayers() {
+    public Set<QuakePlayer> getKilledPlayers() {
         return killedPlayers;
     }
 
@@ -63,6 +64,14 @@ public class ShotgunBullet implements IBullet {
     }
 
     public void addKilledPlayer(QuakePlayer player) {
+        killedPlayers.add(player);
+    }
+
+    public Set<QuakePlayer> getHitPlayers() {
+        return killedPlayers;
+    }
+
+    public void addHitPlayer(QuakePlayer player) {
         killedPlayers.add(player);
     }
 

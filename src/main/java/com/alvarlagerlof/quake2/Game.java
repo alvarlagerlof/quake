@@ -13,6 +13,7 @@ import com.alvarlagerlof.quake2.Weapons.Machinegun;
 import com.alvarlagerlof.quake2.Bullets.IBullet;
 import com.alvarlagerlof.quake2.MathUtil;
 import com.alvarlagerlof.quake2.SidebarScoreboard;
+import com.alvarlagerlof.quake2.HealthScoreboard;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -37,14 +38,17 @@ class Game implements Listener {
 
     Main plugin;
     String arena = "Desert";
+
     SidebarScoreboard sidebarScoreboard = new SidebarScoreboard("&6&lQUAKE");
+    HealthScoreboard healthScoreboard = new HealthScoreboard();
+
     Set<QuakePlayer> players = new HashSet<>();
     Set<IBullet> bullets = new HashSet<>();
 
     public Game(Main plugin) {
         this.plugin = plugin;
 
-        updateScoreboard();
+        updateSidebarScoreboard();
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
@@ -67,13 +71,15 @@ class Game implements Listener {
         QuakePlayer quakePlayer = new QuakePlayer(player);
         players.add(quakePlayer);
 
-        updateScoreboard();
-        sidebarScoreboard.setForPlayer(quakePlayer);
+        updateSidebarScoreboard();
+        sidebarScoreboard.showForPlayer(quakePlayer);
+        healthScoreboard.showForPlayer(quakePlayer);
 
         quakePlayer.addWeapon(new Sniper(quakePlayer));
         quakePlayer.addWeapon(new Shotgun(quakePlayer));
         quakePlayer.addWeapon(new Machinegun(quakePlayer));
         quakePlayer.updateInventory();
+
     }
 
     public void leave(QuakePlayer player) {
@@ -84,8 +90,9 @@ class Game implements Listener {
 
         players.remove(player);
 
-        updateScoreboard();
+        updateSidebarScoreboard();
         sidebarScoreboard.hideForPlayer(player);
+        healthScoreboard.hideForPlayer(player);
     }
 
     public QuakePlayer findPlayer(Player player) {
@@ -95,7 +102,7 @@ class Game implements Listener {
         return null;
     }
 
-    void updateScoreboard() {
+    void updateSidebarScoreboard() {
         List<String> newContent = new ArrayList<String>();
         newContent.add("&c&lKills");
 
@@ -106,7 +113,7 @@ class Game implements Listener {
         newContent.add("&2&lMap: &r" + arena);
 
         sidebarScoreboard.update(newContent);
-        players.forEach(p -> sidebarScoreboard.setForPlayer(p));
+        players.forEach(p -> sidebarScoreboard.showForPlayer(p));
     }
 
     void updateBullets() {
@@ -129,9 +136,8 @@ class Game implements Listener {
                     for (QuakePlayer player : players) {
                         Boolean dead = player.hit(bullet);
                         if (dead) {
-                            player.getPlayer().setHealth(0);
                             bullet.getShooter().increaseKills();
-                            updateScoreboard();
+                            updateSidebarScoreboard();
                         }
                     }
 
@@ -162,12 +168,11 @@ class Game implements Listener {
 
     @EventHandler
     private void onDeath(PlayerDeathEvent event) {
-        // QuakePlayer player = (QuakePlayer) event.getEntity();
-        // if (players.contains(player)) {
-        // player.sendMessage("you died");
-        // }
-
-        // todo: tp player
+        Player player = (Player) event.getEntity();
+        QuakePlayer quakePlayer = findPlayer(player);
+        if (quakePlayer != null) {
+            event.setDeathMessage(null);
+        }
     }
 
     @EventHandler
@@ -191,9 +196,9 @@ class Game implements Listener {
     }
 
     @EventHandler
-    private void onHit(EntityDamageByEntityEvent e) {
-        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-            e.setDamage(0.0);
+    private void onHit(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+            event.setDamage(0.0);
         }
     }
 
@@ -243,6 +248,7 @@ class Game implements Listener {
         if (findPlayer(player) != null) {
             event.setKeepInventory(true);
             event.getDrops().clear();
+            event.setDroppedExp(0);
         }
     }
 

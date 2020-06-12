@@ -17,6 +17,7 @@ public class SidebarScoreboard {
 
     String name;
     List<String> content;
+    List<String> oldContent;
 
     ScoreboardManager manager;
     Scoreboard board;
@@ -24,14 +25,16 @@ public class SidebarScoreboard {
 
     public SidebarScoreboard(String name) {
         this.name = name;
-
-        reset();
     }
 
-    void reset() {
-        manager = Bukkit.getScoreboardManager();
-        board = manager.getNewScoreboard();
-        objective = board.registerNewObjective(name, "dummy criteria", name);
+    void reset(QuakePlayer player) {
+        board = (Scoreboard) player.getScoreboard();
+
+        if (board.getObjective(name) != null) {
+            objective = board.getObjective(name);
+        } else {
+            objective = board.registerNewObjective(name, "s", name);
+        }
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
@@ -39,11 +42,16 @@ public class SidebarScoreboard {
 
     public void update(List<String> newContent) {
         Collections.reverse(newContent);
-        this.content = newContent;
+        oldContent = content;
+        content = newContent;
     }
 
-    public void setForPlayer(QuakePlayer player) {
-        reset();
+    public void showForPlayer(QuakePlayer player) {
+        reset(player);
+
+        for (int i = 0; i < oldContent.size(); i++) {
+            board.resetScores(ChatColor.translateAlternateColorCodes('&', oldContent.get(i)));
+        }
 
         for (int i = 0; i < content.size(); i++) {
             String entry = ChatColor.translateAlternateColorCodes('&', content.get(i));

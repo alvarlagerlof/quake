@@ -17,6 +17,7 @@ public interface IBullet {
     Double speed = null;
     Double damage = null;
     Set<QuakePlayer> killedPlayers = null;
+    Set<QuakePlayer> hitPlayers = null;
 
     public QuakePlayer getShooter();
 
@@ -34,9 +35,13 @@ public interface IBullet {
 
     public Timer getLifetimeTimer();
 
-    public Set<QuakePlayer> getkilledPlayers();
+    public Set<QuakePlayer> getKilledPlayers();
+
+    public Set<QuakePlayer> getHitPlayers();
 
     public void addKilledPlayer(QuakePlayer player);
+
+    public void addHitPlayer(QuakePlayer player);
 
     public void spawnParticle();
 
